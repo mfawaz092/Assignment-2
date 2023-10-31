@@ -35,7 +35,21 @@ public class EchoServer extends AbstractServer
   {
     super(port);
   }
+  
+  public void clientConnected(ConnectionToClient client) {
+	  
+	  System.out.println("Welcome! You are now connected to the server");
+  }
+  
+  public synchronized void clientDisconnected(ConnectionToClient client) {
+	  
+	  System.out.print("Bye! You are now disconnected from the server");
+  }
 
+  public synchronized void clientException(ConnectionToClient client, Throwable exception) {
+	  
+	  System.out.println("Bye! You are now disconnected from the server");
+  }
   
   //Instance methods ************************************************
   
