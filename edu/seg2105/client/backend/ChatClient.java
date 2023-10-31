@@ -81,6 +81,19 @@ public class ChatClient extends AbstractClient
     }
   }
   
+  public void connectionClosed() {
+	  
+	  System.out.println("Connection to server closed");
+	  
+  }
+  
+  public void connectionException(Exception exception) {
+	  
+	  System.out.println("The server has shutdown. Disconnecting you from server...");
+	  quit();
+	  
+  }
+  
   /**
    * This method terminates the client.
    */
