@@ -78,7 +78,61 @@ public class EchoServer extends AbstractServer
   }
   
   private void handleCommand(String message) {
+	  String[] arguments = message.split(" ");
+	  String command = arguments[0];
 	  
+	  if (command.equals("#quit")) {
+		  try {
+			this.close();
+		  } catch (IOException e) {
+			  System.exit(1); 
+		  }
+	
+		  System.exit(0);
+	  }
+	  
+	  else if (command.equals("#stop")) {
+		  this.stopListening();
+	  }
+	  
+	  else if (command.equals("#close")) {
+		  try {
+			this.close();
+		  } catch (IOException e) {
+			  System.out.println("Error closing the server");  
+		  }
+	  }
+	  
+	  else if (command.equals("#setport")) {
+		  if (this.isListening() || this.getNumberOfClients() > 0) {
+			  System.out.println("Cannot set port while server is open");
+		  }
+		  else {
+			  super.setPort(Integer.parseInt(arguments[1]));
+		  }
+	  }
+	  
+	  else if (command.equals("#start")) {
+		  if (this.isListening()) {
+			  System.out.println("You are already listening for new clients");
+		  }
+		  else {
+			  try {
+				this.listen();
+				
+			  } catch (IOException e) {
+				  System.out.println("Error listening for new clients");
+			  }
+		  }
+	  }
+	  
+	  else if (command.equals("#getport")) {
+		  System.out.println("Current port is " + this.getPort());
+	  }
+	  
+	  else {
+		  System.out.println(command + " is an invalid command");
+	  }
   }
   
   /**

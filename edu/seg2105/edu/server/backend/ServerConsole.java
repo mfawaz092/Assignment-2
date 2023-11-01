@@ -35,7 +35,9 @@ public class ServerConsole implements ChatIF {
 	      {
 	        message = fromConsole.nextLine();
 	        server.handleMessageFromServerConsole(message);
-	        this.display(message);
+	        if(!message.startsWith("#")) {
+	        	this.display(message);
+	        }
 	      }
 	    } 
 	    catch (Exception ex) 
@@ -46,6 +48,6 @@ public class ServerConsole implements ChatIF {
 	}
 	
 	public void display(String message) {
-		System.out.println("SERVER MSG> " + message);
+		System.out.println("> " + message);
 	}
 }
