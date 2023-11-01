@@ -43,7 +43,7 @@ public class EchoServer extends AbstractServer
   
   public void clientConnected(ConnectionToClient client) {
 	  
-	  this.sendToAllClients(" SERVER MSG> Welcome! You are now connected to the server");
+	  this.sendToAllClients("SERVER MSG> Welcome! You are now connected to the server");
 	  System.out.println(client + " connected to the server");
   }
   
@@ -147,8 +147,27 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	String message = msg.toString();
+	if (message.startsWith("#") && client.getInfo("loginID") == null) {
+		handleLoginID(message, client);
+	}
+	else {
+		System.out.println("Message received: " + msg + " from " + client);
+	    this.sendToAllClients(client.getInfo("loginID") + ":" + " " + message);
+	}
+  }
+  
+  private void handleLoginID(String message, ConnectionToClient client) {
+	  String[] arguments = message.split(" ");
+	  String command = arguments[0];
+	  
+	  if (command.equals("#loginID")) {
+		  client.setInfo("loginID", arguments[1]);
+	  }
+	  
+	  else {
+		  System.out.println(command + " is an invalid command");
+	  }
   }
     
   /**
