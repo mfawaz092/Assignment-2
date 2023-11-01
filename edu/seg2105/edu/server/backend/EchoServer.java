@@ -4,6 +4,9 @@ package edu.seg2105.edu.server.backend;
 // license found at www.lloseng.com 
 
 
+import java.io.IOException;
+
+import edu.seg2105.client.common.ChatIF;
 import ocsf.server.*;
 
 /**
@@ -23,6 +26,8 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  
+  ChatIF serverUI;
   
   //Constructors ****************************************************
   
@@ -52,6 +57,29 @@ public class EchoServer extends AbstractServer
   }
   
   //Instance methods ************************************************
+  
+  
+  public void handleMessageFromServerConsole(String message)
+  {
+    try
+    {
+    	if (message.startsWith("#")) {
+    		handleCommand(message);
+    	}
+    	else {
+    		sendToAllClients("SERVER MSG> " + message);
+    	}
+    }
+    catch(Exception e)
+    {
+      serverUI.display
+        ("Could not send message to clients");
+    }
+  }
+  
+  private void handleCommand(String message) {
+	  
+  }
   
   /**
    * This method handles any messages received from the client.
@@ -86,16 +114,6 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
-  
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
@@ -109,16 +127,8 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
+    ServerConsole sv = new ServerConsole(port);
+    sv.accept();
   }
 }
 //End of EchoServer class
