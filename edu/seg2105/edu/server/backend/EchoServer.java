@@ -43,17 +43,20 @@ public class EchoServer extends AbstractServer
   
   public void clientConnected(ConnectionToClient client) {
 	  
-	  System.out.println("Welcome! You are now connected to the server");
+	  this.sendToAllClients(" SERVER MSG> Welcome! You are now connected to the server");
+	  System.out.println(client + " connected to the server");
   }
   
   public synchronized void clientDisconnected(ConnectionToClient client) {
 	  
-	  System.out.print("Bye! You are now disconnected from the server");
+	  this.sendToAllClients("Bye! You are now disconnected from the server");
+	  System.out.println(client + " disconnected from the server");
   }
 
   public synchronized void clientException(ConnectionToClient client, Throwable exception) {
 	  
-	  System.out.println("Bye! You are now disconnected from the server");
+	  this.sendToAllClients("Bye! You are now disconnected from the server");
+	  System.out.println(client + " disconnected from the server");
   }
   
   //Instance methods ************************************************
