@@ -71,7 +71,12 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+    	if (message.startsWith("#")) {
+    		handleCommand(message);
+    	}
+    	else {
+    		sendToServer(message);
+    	}
     }
     catch(IOException e)
     {
@@ -79,6 +84,66 @@ public class ChatClient extends AbstractClient
         ("Could not send message to server.  Terminating client.");
       quit();
     }
+  }
+  
+  private void handleCommand(String message) {
+	  String[] arguments = message.split(" ");
+	  String command = arguments[0];
+	  
+	  if (command.equals("#quit")) {
+		  quit();
+	  }
+	  
+	  else if (command.equals("#logoff")) {
+		  try {
+			closeConnection();
+		} catch (IOException e) {
+			System.out.println("Error logging off");
+		}
+	  }
+	  
+	  else if (command.equals("#sethost")) {
+		  if (isConnected()) {
+			  System.out.println("Cannot set host while connected");
+		  }
+		  else {
+			  this.setHost(arguments[1]);
+		  }
+	  }
+	  
+	  else if (command.equals("#setport")) {
+		  if (isConnected()) {
+			  System.out.println("Cannot set port while connected");
+		  }
+		  else {
+			  this.setPort(Integer.parseInt(arguments[1]));
+		  }
+	  }
+	  
+	  else if (command.equals("#login")) {
+		  if (isConnected()) {
+			  System.out.println("You are already connected");
+		  }
+		  else {
+			  try {
+				openConnection();
+			} catch (IOException e) {
+				System.out.println("Error logging in");
+			}
+		  }
+	  }
+	  
+	  else if (command.equals("#gethost")) {
+		  System.out.println("Current host is " + this.getHost());
+	  }
+	  
+	  else if (command.equals("#getport")) {
+		  System.out.println("Current port is " + this.getPort());
+	  }
+	  
+	  else {
+		  System.out.println(command + " is an invalid command");
+	  }
   }
   
   public void connectionClosed() {
