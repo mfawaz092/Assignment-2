@@ -43,20 +43,17 @@ public class EchoServer extends AbstractServer
   
   public void clientConnected(ConnectionToClient client) {
 	  
-	  this.sendToAllClients("SERVER MSG> Welcome! You are now connected to the server");
-	  System.out.println(client + " connected to the server");
+	  System.out.println("A new client has connected to the server");
   }
   
   public synchronized void clientDisconnected(ConnectionToClient client) {
 	  
-	  this.sendToAllClients("Bye! You are now disconnected from the server");
-	  System.out.println(client + " disconnected from the server");
+	  System.out.println(client.getInfo("loginID") + " has disconnected from the server");
   }
 
   public synchronized void clientException(ConnectionToClient client, Throwable exception) {
 	  
-	  this.sendToAllClients("Bye! You are now disconnected from the server");
-	  System.out.println(client + " disconnected from the server");
+	  System.out.println(client.getInfo("loginID") + " has disconnected from the server");
   }
   
   //Instance methods ************************************************
@@ -148,12 +145,13 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
 	String message = msg.toString();
-	if (message.startsWith("#") && client.getInfo("loginID") == null) {
+	
+	if (message.startsWith("#loginID")) {
 		handleLoginID(message, client);
 	}
 	else {
-		System.out.println("Message received: " + msg + " from " + client);
-	    this.sendToAllClients(client.getInfo("loginID") + ":" + " " + message);
+		System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
+	    this.sendToAllClients(client.getInfo("loginID") + ">" + " " + message);
 	}
   }
   
@@ -161,7 +159,11 @@ public class EchoServer extends AbstractServer
 	  String[] arguments = message.split(" ");
 	  String command = arguments[0];
 	  
-	  if (command.equals("#loginID")) {
+	  System.out.println("Message received: #login " + arguments[1] + " from " + client.getInfo("loginID"));
+	  System.out.println(arguments[1] + " has logged on");
+	  sendToAllClients("SERVER MSG> " + arguments[1] + " has logged on");
+	  
+	  if (command.equals("#loginID") && client.getInfo("loginID") == null) {
 		  client.setInfo("loginID", arguments[1]);
 	  }
 	  
